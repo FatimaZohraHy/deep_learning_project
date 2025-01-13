@@ -1,0 +1,48 @@
+server:
+  port: 8222
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+
+
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 1000000 # Connection timeout in milliseconds (1000 seconds)
+        response-timeout: 600s
+      discovery:
+        locator:
+          enabled: true
+      mvc:
+        routes:
+          - id: users
+            uri: http://localhost:8090
+            predicates:
+              - Path=/user/**
+          - id: ftmodel
+            uri: http://localhost:5000
+            predicates:
+              - Path=/ft/**
+          - id: gar_gen
+            uri: http://localhost:5002
+            predicates:
+              - Path=/rag/**
+          - id: ai_gen
+            uri: http://localhost:5001
+            predicates:
+              - Path=/ai/**
+
+
+
+
+  application:
+    name: gateway
+  config:
+    import: optional:configserver:http://localhost:8888
+
+
+
