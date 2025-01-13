@@ -69,6 +69,78 @@ To fine-tune the model, we curated a dataset tailored to cybersecurity. The data
   ### Response:
   {output}
 
+### Step 2: Loading Pre-Trained Models
+
+To begin the fine-tuning process, we loaded the **Llama-3-8B-Instruct** model using the **Unsloth framework**. This framework is designed to optimize the fine-tuning process for both speed and efficiency. The model was loaded with **4-bit quantization**, a technique that significantly reduces memory usage while maintaining high performance.
+
+- **Model:** `unsloth/llama-3-8b-Instruct-bnb-4bit`  
+- **Framework:** Unsloth (for faster fine-tuning)  
+- **Quantization:** 4-bit (to reduce GPU memory requirements)  
+
+### Step 3: Fine-Tuning the Model
+
+The fine-tuning process involved training the model on a custom cybersecurity dataset. To ensure efficiency, we utilized **LoRA (Low-Rank Adaptation)**, which focuses on fine-tuning specific layers of the model while keeping the majority of the pre-trained weights frozen. This approach allows for parameter-efficient fine-tuning.
+
+- **Training Framework:** `trl (SFTTrainer)`
+
+#### LoRA Configuration:
+- `r = 16` (rank of the low-rank matrices)
+- `lora_alpha = 16`
+- `target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]`
+
+#### Training Parameters:
+- `batch_size = 2`
+- `learning_rate = 1e-4`
+- `max_steps = 1500`
+- `gradient_accumulation_steps = 4`
+- `warmup_steps = 5`
+
+### Step 4: Evaluation and Testing
+
+After fine-tuning, the model was thoroughly evaluated using a validation dataset to ensure it met performance requirements. The evaluation focused on the following key metrics:
+
+- **Accuracy:** The model's ability to provide correct and relevant answers.
+- **Relevance:** The model's adherence to cybersecurity-related queries.
+- **Response Time:** The time taken to generate responses.
+
+To verify the model's scope adherence, it was tested with both cybersecurity-related and unrelated questions. For example:
+
+#### Example Tests:
+
+- **Cybersecurity Query:**  
+  _"What is a DoS attack?"_  
+  **Response:**  
+  _"A Denial of Service (DoS) attack is a type of cyber attack where an attacker attempts to make a computer or network resource unavailable by flooding it with traffic, causing it to become overwhelmed and unable to respond to legitimate requests."_  
+
+- **Non-Cybersecurity Query:**  
+  _"What is the capital of France?"_  
+  **Response:**  
+  _"I'm happy to help with cybersecurity-related questions, but I must politely refuse to answer questions that are unrelated to cybersecurity."_  
+
+### Step 5: Saving and Deploying the Fine-Tuned Model
+
+After successfully fine-tuning and evaluating the model, it was saved and prepared for deployment. This process ensures seamless integration into our cybersecurity chatbot.
+
+- **Model and Tokenizer:** Saved locally for future use.
+- **Hugging Face Hub Repository:** [`Joussef/llama_security_model`](https://huggingface.co/Joussef/llama_security_model)
+- **Deployment Format:** Compatible with Hugging Face Transformers and GGUF, enabling efficient inference.
+
+### Key Tools and Frameworks
+
+- **Unsloth:** For faster and more efficient fine-tuning.
+- **LoRA:** For parameter-efficient fine-tuning.
+- **Hugging Face Transformers:** For model loading, training, and inference.
+- **trl (SFTTrainer):** For supervised fine-tuning.
+- **Hugging Face Hub:** For model storage and sharing.
+
+### Results
+
+The fine-tuned model demonstrates the following:
+
+- **Domain-Specific Expertise:** Provides accurate and relevant responses to cybersecurity queries.
+- **Scope Adherence:** Politely refuses to answer non-cybersecurity questions.
+- **Efficiency:** Optimized for deployment in production environments.
+
 ## 2. Retrieval-Augmented Generation (RAG)
 Retrieval-Augmented Generation (RAG) is a powerful architecture that enhances the ability of language models to generate accurate responses by combining a retrieval mechanism with generative capabilities. In this project, RAG is used to build a cybersecurity-focused chatbot capable of answering domain-specific queries by retrieving relevant context from a document database.
 - **Step 1: Embedding Function**
