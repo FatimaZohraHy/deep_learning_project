@@ -128,7 +128,9 @@ Microservices architecture in Spring Boot is an approach to building an applicat
 - Independent services for specific functionalities.  
 - Centralized service discovery using **Eureka**.  
 - Gateway routing for efficient communication between clients and services.  
-- JWT-based authentication for secure user management.  
+- JWT-based authentication for secure user management.
+- Generative AI Service
+- RAG service  
 
 ---
 
@@ -220,6 +222,38 @@ The Flask application serves as a lightweight API server that runs a machine lea
      ```
 
 
+# Generative AI Service
+
+The Generative AI Service is a Flask-based microservice designed to detect and generate insights on cybersecurity threats using an advanced AI model. It forms part of a microservices architecture and is registered with Eureka for seamless integration with other services.
+
+## Service Features
+
+### Model Initialization
+- The service uses a pre-trained GPT-2 model (`Mohammedbendahrass/threat-detection-gpt2`) fine-tuned for threat detection tasks.
+- The model and tokenizer are initialized using the `transformers` library and are optimized for execution on the CPU.
+
+### Eureka Registration
+- The Flask app is dynamically registered with the Eureka Discovery Service using an instance ID and service details such as port and hostname.
+- Registration ensures other microservices can discover and communicate with this service without hardcoded endpoints.
+
+### API Endpoint for Threat Detection
+- **Endpoint**: `/ai/detection`
+- **Method**: `POST`
+- **Input**: Accepts a JSON payload with a `prompt` containing a cybersecurity threat description.
+  - Example:
+    ```json
+    {
+      "prompt": "THREAT_NAME: Ransomware attack\nTHREAT_DESCRIPTION:"
+    }
+    ```
+- **Output**: Returns a generated response detailing the threat or providing additional insights.
+  - Example:
+    ```json
+    {
+      "response": "THREAT_DESCRIPTION: This ransomware attack encrypts user files and demands a ransom payment in cryptocurrency to decrypt them.",
+      "status": "success"
+    }
+    ```
 
 
 
