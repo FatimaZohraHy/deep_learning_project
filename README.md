@@ -46,6 +46,8 @@ As the LLMs Responsible, my role involves optimizing and fine-tuning pre-trained
 ---
 
 ## Fine-Tuning Process
+![image](https://github.com/user-attachments/assets/fad759b3-b1f7-4fcf-a730-f9f3637c19cb)
+
 
 ### Step 1: Preparing the Dataset
 To fine-tune the model, we curated a dataset tailored to cybersecurity. The dataset consists of question-answer pairs that cover a wide range of cybersecurity topics, such as threat detection, incident response, and network security. Additionally, synthetic data was generated using LLMs to enhance its diversity and coverage.
