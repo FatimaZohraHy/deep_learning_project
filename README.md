@@ -5,7 +5,8 @@
 2. [Fine-Tuning the Model](#fine-tuning-the-model)
 3. [Threat Generation Model](#threat-generation-model)
 4. [Microservices Architecture with Spring Boot and Flask](#microservices-architecture-with-spring-boot-and-flask)
-
+5. [Hosting and Deployment](#hosting-and-deployment)
+   
 ## Introduction
 
 This project aims to develop a cybersecurity-focused chatbot leveraging advanced machine learning technologies, including Language Understanding Models (LUMs) like GPT-4 and BERT, Diffusion Models for threat forecasting, and Retrieval-Augmented Generation (RAG) for enhanced responses. The system will adopt a microservices architecture to ensure scalability, maintainability, and ease of deployment. The project also integrates best practices in DevOps and MLOps for continuous integration, deployment, and monitoring.
@@ -29,8 +30,8 @@ The main objectives of the project are:
 
 ## Roles and Responsibilities
 
-### Front-end Developer (Angular / React JS)
-- Develop the chatbot's user interface using **Angular** or **React JS**.
+### Front-end Developer (Angular)
+- Develop the chatbot's user interface using **Angular**.
 - Ensure that the frontend is intuitive and responsive for security analysts to interact with the chatbot seamlessly.
 - Integrate the frontend with the backend APIs for real-time communication.
 
@@ -234,10 +235,10 @@ After populating the database, the system is ready to handle user queries by ret
 ## Technologies Used
 
 - **Frontend**: Angular.
-- **Backend**: SpringBoot, Python (Flask)
+- **Backend**: SpringBoot, Python (Flask).
 - **Language Models**: GPT-4, BERT
 - **Diffusion Models**: Custom or pre-built models for threat diffusion forecasting
-- **CI/CD**: Jenkins, GitLab CI, or GitHub Actions
+- **CI/CD**: Jenkins, GitLab CI, or GitHub Actions, gounicorn, nginx
 - **Infrastructure as Code**: Terraform, Ansible
 - **Model Management**: MLflow
 - **Version Control**: Git, GitHub
