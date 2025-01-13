@@ -362,3 +362,54 @@ The Generative AI Service is a Flask-based microservice designed to detect and g
 
 
 
+# RAG Flask Service
+
+## Overview
+The RAG Flask Service integrates retrieval-augmented generation (RAG) techniques with a language model to provide domain-specific, context-aware responses. This implementation focuses on the cybersecurity domain, enhancing response accuracy by leveraging external data sources for context retrieval.
+
+---
+
+## Features and Capabilities
+
+### Service Purpose
+- Designed to answer cybersecurity-related questions using a hybrid approach of retrieval and generation.
+- Combines a pre-trained large language model (LLM) with a Chroma vector database for relevant context retrieval.
+
+### Key Functionalities
+
+1. **Context Retrieval**:
+   - The service uses a Chroma vector store to retrieve relevant documents based on the query.
+   - Documents are retrieved using similarity search with a custom embedding function.
+
+2. **Contextual Response Generation**:
+   - A pre-defined prompt template ensures the LLM focuses on cybersecurity-specific answers.
+   - The retrieved documents serve as context for the LLM to generate informed responses.
+
+3. **Source Attribution**:
+   - The response includes references to the source documents, enhancing transparency and reliability.
+
+### Eureka Registration
+- Dynamically registers with the Eureka Discovery Service.
+- Facilitates service discovery in a microservices architecture, ensuring seamless communication between components.
+
+---
+
+## Implementation Details
+
+### Input
+
+- **Endpoint**: `/rag/generate`
+- **Method**: `POST`
+- **Payload**:
+  ```json
+  {
+    "query_text": "What are the primary risks of ransomware attacks?"
+  }
+
+
+### Output
+ ```json
+{
+  "response": "Ransomware attacks encrypt user data and demand payment for decryption. Primary risks include data loss, operational downtime, and financial extortion.",
+  "sources": ["doc_123", "doc_456"]
+}
