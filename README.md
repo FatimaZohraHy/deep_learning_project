@@ -113,14 +113,12 @@ Retrieval-Augmented Generation (RAG) is a powerful architecture that enhances th
 
 ## Technologies Used
 
-- **Frontend**: Angular, React JS
-- **Backend**: Node.js, Python (Flask/Django for APIs)
+- **Frontend**: Angular.
+- **Backend**: SpringBoot, Python (Flask)
 - **Language Models**: GPT-4, BERT
 - **Diffusion Models**: Custom or pre-built models for threat diffusion forecasting
 - **CI/CD**: Jenkins, GitLab CI, or GitHub Actions
-- **Containerization**: Docker, Kubernetes
 - **Infrastructure as Code**: Terraform, Ansible
-- **Monitoring and Logging**: Prometheus, Grafana, ELK Stack
 - **Model Management**: MLflow
 - **Version Control**: Git, GitHub
 
@@ -431,7 +429,7 @@ The RAG Flask Service integrates retrieval-augmented generation (RAG) techniques
   "response": "Ransomware attacks encrypt user data and demand payment for decryption. Primary risks include data loss, operational downtime, and financial extortion.",
   "sources": ["doc_123", "doc_456"]
 }
-
+ ```
 # Front-End Hosting: Angular
 
 1. **Preparing the Application**
