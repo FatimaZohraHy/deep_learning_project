@@ -414,6 +414,9 @@ The RAG Flask Service integrates retrieval-augmented generation (RAG) techniques
   "sources": ["doc_123", "doc_456"]
 }
 
+```
+
+---
 
 # Front-End Hosting: Angular
 
@@ -568,4 +571,3 @@ This command will start the service and handle multiple requests with 5 workers,
 The chatbot is now hosted successfully:
 
 ![Hosted Chatbot](https://github.com/user-attachments/assets/3a810928-d4b0-4e7f-81d0-1ad49c515aea)
-
