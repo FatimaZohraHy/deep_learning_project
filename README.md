@@ -431,3 +431,96 @@ The RAG Flask Service integrates retrieval-augmented generation (RAG) techniques
   "response": "Ransomware attacks encrypt user data and demand payment for decryption. Primary risks include data loss, operational downtime, and financial extortion.",
   "sources": ["doc_123", "doc_456"]
 }
+
+# Front-End Hosting: Angular
+
+1. **Preparing the Application**
+To prepare our Angular application for deployment, we need to generate the optimized files for production:
+To do this, we use the following command:
+ng build --prod
+
+# Installation and Configuration of Nginx
+
+Nginx is a high-performance, open-source web server designed to handle heavy loads while remaining fast and lightweight.
+Nginx is often used for modern applications due to its reliability, flexible configuration, and excellent scalability to meet growing demands.
+On our AWS EC2 t3.large instance, we will install Nginx:
+sudo apt update
+sudo apt install nginx
+
+We configure our project in the file:
+/etc/nginx/sites-available/angular-project
+server {
+    listen 80;
+    server_name 13.48.34.100; 
+
+    root /var/www/angular_chatbot/front-chatbot/dist/front-chatbot/browser ; # Chemin vers les fichiers de votre application Angular
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html; # Sert index.html pour les routes Angular
+    }
+
+    # Optionnel : Compression gzip pour améliorer les performances
+    gzip on;
+    gzip_types text/plain application/javascript application/x-javascript text/javascript text/css application/json;
+    gzip_min_length 1000;
+}
+
+We create a symbolic link from our configuration to the **sites-enabled** folder:
+sudo ln -s /etc/nginx/sites-available/angular-project /etc/nginx/sites-enabled/
+and finally we restart the server:
+sudo systemctl restart nginx
+
+# Hosting Spring Boot Services
+
+To host our microservices developed with Spring Boot, we followed a simple and efficient process. This process ensures standalone deployment with continuous operation of the services on the server. Here are the detailed steps:
+
+---
+
+First, we need to install the prerequisites:
+- java : 21
+- maven : latest
+
+## **Step 1: Clone the Microservice Repository**
+
+Each microservice is managed in a separate Git repository. We started by cloning the repository containing the microservice's source code:
+git clone https://github.com/linataataa/springboot_services.git
+cd springboot_services  
+
+## **Step 2: Build the Project with Maven**
+
+Once the repository was cloned, we used Maven to compile and package the application. This step generates an executable `.jar` file:
+In the directory of each microservice, we execute:  
+mvn clean package
+
+Once this command is completed, a `.jar` file is generated in the `target/` directory.  
+
+---  
+
+## **Step 3: Deploy and Run the Service**
+
+To run the microservice, we used the following command:
+nohup java -jar /target/notre-application.jar > /var/log/spring-services.log 2>&1 &
+
+Finally, we get the following result:  
+![image](https://github.com/user-attachments/assets/e893929f-f20b-413b-b65e-826a32bf2f04)
+
+# Hosting ML Services (Python)
+
+The Python services hosting Machine Learning models were deployed and executed using **Gunicorn**. Here is a step-by-step guide to our deployment, similar to the method used for Spring Boot.
+
+First, we need to install the prerequisites:  
+
+- python3  
+- pip3  
+- gunicorn  
+
+Just like with Spring Boot, we launch our service:
+nohup gunicorn --bind 0.0.0.0:5000 --workers 5 app:app > /var/log/python-services.log 2>&1 &
+
+Workers allow Gunicorn to handle multiple requests simultaneously. Each worker is an independent process that can manage requests without blocking others.
+![image](https://github.com/user-attachments/assets/a474833d-d9bf-4aab-9884-ed91e154ca17)
+
+And here is our chatbot hosted
+![image](https://github.com/user-attachments/assets/3a810928-d4b0-4e7f-81d0-1ad49c515aea)
+
