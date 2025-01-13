@@ -1,5 +1,11 @@
 # Cybersecurity-Focused Chatbot Project
 
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Fine-Tuning the Model](#fine-tuning-the-model)
+3. [Threat Generation Model](#threat-generation-model)
+4. [Microservices Architecture with Spring Boot and Flask](#microservices-architecture-with-spring-boot-and-flask)
+
 ## Introduction
 
 This project aims to develop a cybersecurity-focused chatbot leveraging advanced machine learning technologies, including Language Understanding Models (LUMs) like GPT-4 and BERT, Diffusion Models for threat forecasting, and Retrieval-Augmented Generation (RAG) for enhanced responses. The system will adopt a microservices architecture to ensure scalability, maintainability, and ease of deployment. The project also integrates best practices in DevOps and MLOps for continuous integration, deployment, and monitoring.
@@ -277,7 +283,7 @@ routes:
     predicates:  
       - Path=/ai/**  
 ```
-## 3. Authentication Service using JWT
+### 3. Authentication Service using JWT
 
 The **Authentication Service** is responsible for verifying user credentials and generating **JWT (JSON Web Token)** tokens. JWT is a compact and self-contained token used for securely transmitting information between parties.
 
@@ -325,7 +331,7 @@ The Flask application serves as a lightweight API server that runs a machine lea
      ```
 
 
-# Generative AI Service
+### 4. Generative AI Service
 
 The Generative AI Service is a Flask-based microservice designed to detect and generate insights on cybersecurity threats using an advanced AI model. It forms part of a microservices architecture and is registered with Eureka for seamless integration with other services.
 
@@ -362,7 +368,7 @@ The Generative AI Service is a Flask-based microservice designed to detect and g
 
 
 
-# RAG Flask Service
+### 5. RAG Flask Service
 
 ## Overview
 The RAG Flask Service integrates retrieval-augmented generation (RAG) techniques with a language model to provide domain-specific, context-aware responses. This implementation focuses on the cybersecurity domain, enhancing response accuracy by leveraging external data sources for context retrieval.
