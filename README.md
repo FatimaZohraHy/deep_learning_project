@@ -46,6 +46,7 @@ As the LLMs Responsible, my role involves optimizing and fine-tuning pre-trained
 ---
 
 ## Fine-Tuning Process
+![nlp_architecture_fine-tunning](https://github.com/user-attachments/assets/9d5968e0-f31c-488a-b299-365a2cb3571b)
 
 
 ### Step 1: Preparing the Dataset
