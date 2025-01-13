@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
-from py_eureka_client.eureka_client import EurekaClient 
+from py_eureka_client.eureka_client import EurekaClient
 import time
 import requests
 import threading
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -60,40 +61,53 @@ def register_with_eureka():
         time.sleep(5)  # Retry after 5 seconds
 
 
-
-
 ######################################
 
-
-# Define the /td/detection endpoint
+# Define the /ai/detection endpoint
 @app.route('/ai/detection', methods=['POST'])
 def threat_detection():
-    # Get the input prompt from the request
-    data = request.json
-    if not data or 'prompt' not in data:
-        return jsonify({"error": "Please provide a 'prompt' in the request body"}), 400
+    try:
+        data = request.json
+        if not data or 'prompt' not in data:
+            return jsonify({"error": "Please provide a 'prompt' in the request body"}), 400
+        
+        test_prompt = data['prompt']
+        inputs = tokenizer(test_prompt, return_tensors="pt").to(device)
+        
+        # Calculate max_length
+        max_length = len(inputs.input_ids[0]) + 100
+        
+        # Use ThreadPoolExecutor for timeout handling
+        with ThreadPoolExecutor() as executor:
+            future = executor.submit(
+                model.generate,
+                inputs.input_ids,
+                max_length=max_length,
+                num_beams=5,
+                temperature=0.6,
+                no_repeat_ngram_size=2,
+                early_stopping=True
+            )
+            try:
+                outputs = future.result(timeout=30)  # 30-second timeout
+            except FuturesTimeoutError:
+                return jsonify({
+                    "error": "Processing timeout",
+                    "message": "The request took too long to process"
+                }), 504
+        
+        generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return jsonify({
+            "response": generated_text,
+            "status": "success"
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "message": "An error occurred during processing"
+        }), 500
 
-    test_prompt = data['prompt']
-
-    # Tokenize the input prompt
-    inputs = tokenizer(test_prompt, return_tensors="pt").to(device)
-
-    # Generate text
-    max_length = len(inputs.input_ids[0]) + 512
-    outputs = model.generate(
-        inputs.input_ids,
-        max_length=max_length,
-        num_beams=5,
-        temperature=0.6,
-        no_repeat_ngram_size=2,
-        early_stopping=True
-    )
-
-    # Decode the generated text
-    generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-    # Return the generated text as a JSON response
-    return jsonify({"generated_text": generated_text})
 
 # Run the Flask app
 if __name__ == '__main__':
