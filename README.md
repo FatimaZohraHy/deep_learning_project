@@ -141,37 +141,82 @@ The fine-tuned model demonstrates the following:
 - **Scope Adherence:** Politely refuses to answer non-cybersecurity questions.
 - **Efficiency:** Optimized for deployment in production environments.
 
-## 2. Retrieval-Augmented Generation (RAG)
-Retrieval-Augmented Generation (RAG) is a powerful architecture that enhances the ability of language models to generate accurate responses by combining a retrieval mechanism with generative capabilities. In this project, RAG is used to build a cybersecurity-focused chatbot capable of answering domain-specific queries by retrieving relevant context from a document database.
-- **Step 1: Embedding Function**
-- The embedding function is a critical component of RAG. It maps both documents and user queries into a shared vector space, enabling efficient similarity-based search. In this project, a pre-trained embedding model optimized for semantic understanding is used. This ensures that document embeddings capture the nuanced meanings necessary for accurate retrieval.
-  - **Purpose**: Convert text data into numerical representations.
-  - **Key Advantage**: Enables fast and meaningful comparisons between query and document content.
-- **Step 2: Populating the Database**
-- This step involves preparing the document database for retrieval. It consists of several sub-steps:
-  1. Loading Documents:
-     - Documents are imported from a directory containing PDF files.
-     - This allows seamless integration of real-world documents into the system.
-  2. Splitting Text into Chunks:
-     - To optimize retrieval, documents are divided into smaller chunks of text
-     - Overlapping chunks ensure no loss of context while maintaining manageable sizes for processing.
-  3. Storing Embeddings in a Vector Database:
-     - The text chunks are embedded into a vector database, ensuring that they can be retrieved based on their semantic similarity to user queries.
-     - A persistent database is used to retain embeddings between sessions.
-  4. Metadata Assignment:
-     - Unique identifiers are created for each text chunk based on its source document and position.
-     - This metadata ensures traceability and efficient retrieval of information.
-- **Step 3: Querying the Database**
-- Once the database is populated, it can be queried to retrieve relevant context for answering user questions. The workflow for querying involves:
-  1. Retrieving Context:
-     - The system uses a similarity-based search to find the most relevant text chunks from the database.
-     - The top results are combined to form a comprehensive context.
-  2. Generating a Response:
-     - The retrieved context is used to generate a tailored response to the user query.
-     - A fine-tuned language model is employed to ensure that the generated answers are accurate and domain-specific.
-  3. Providing Sources:
-     - Alongside the generated response, the system also outputs the source documents used in the answer.
-     - This enhances transparency and trustworthiness.
+### 2. Retrieval-Augmented Generation (RAG)
+
+Retrieval-Augmented Generation (RAG) is a robust architecture that combines a retrieval mechanism with generative capabilities, enhancing the ability of language models to produce accurate and contextually relevant responses. In this project, RAG is utilized to build a cybersecurity-focused chatbot that answers domain-specific queries by retrieving relevant context from a document database.
+
+#### Step 1: Embedding Function
+
+The embedding function is a crucial component of RAG. It maps both documents and user queries into a shared vector space, facilitating efficient similarity-based searches. To ensure accurate retrieval, a pre-trained embedding model optimized for semantic understanding is used, capturing the nuanced meanings required for cybersecurity contexts.
+
+- **Purpose:** Converts text data into numerical representations for efficient comparisons.
+- **Key Advantage:** Enables fast and meaningful similarity searches between queries and document content.
+
+#### Implementation
+
+The embedding function is implemented as follows:
+
+```python
+import warnings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+def get_embedding_function():
+    # Use CPU for embeddings
+    embeddings = HuggingFaceEmbeddings(
+        model_name="OrdalieTech/Solon-embeddings-large-0.1",
+        model_kwargs={'device': 'cpu'}  # Force CPU usage
+    )
+    return embeddings
+```
+#### Step 2: Populating the Database
+
+Populating the document database is a critical step in setting up the retrieval mechanism for the chatbot. This involves preparing documents, processing them into manageable chunks, and embedding them into a vector database for efficient retrieval.
+
+1. **Loading Documents:**
+   - Documents are imported from a directory containing PDF files.
+   - This enables seamless integration of real-world documents into the system, making the chatbot adaptable to dynamic content.
+
+2. **Splitting Text into Chunks:**
+   - To optimize retrieval, documents are divided into smaller, manageable chunks of text.
+   - Overlapping chunks are created to ensure no loss of context and to maintain coherence during processing.
+
+3. **Storing Embeddings in a Vector Database:**
+   - The text chunks are embedded into a vector database, allowing retrieval based on semantic similarity to user queries.
+   - A persistent vector database is utilized, ensuring embeddings are retained across sessions for consistent performance.
+
+4. **Metadata Assignment:**
+   - Unique identifiers are assigned to each text chunk based on its source document and position within the document.
+   - This metadata ensures traceability and facilitates efficient retrieval of relevant information.
+
+#### Step 3: Querying the Database
+
+After populating the database, the system is ready to handle user queries by retrieving relevant context and generating precise responses. The workflow for querying the database is as follows:
+
+1. **Retrieving Context:**
+   - The system performs a similarity-based search to locate the most relevant text chunks from the database.
+   - The top results are combined to form a comprehensive context that aligns with the user’s query.
+
+2. **Generating a Response:**
+   - The retrieved context is utilized to generate a tailored response to the user query.
+   - A fine-tuned language model ensures the generated answers are both accurate and domain-specific, catering to cybersecurity-related queries.
+
+3. **Providing Sources:**
+   - In addition to the generated response, the system outputs the source documents referenced in the answer.
+   - This feature enhances transparency, traceability, and trustworthiness by linking responses to their original sources.
+
+### Key Features of RAG Implementation
+
+1. **Efficient Retrieval**  
+   - Utilizes a vector database (Chroma) to perform fast and accurate similarity-based searches for relevant text chunks.
+
+2. **Domain-Specific Responses**  
+   - Employs a fine-tuned language model (Llama-3) to generate precise, cybersecurity-focused answers tailored to user queries.
+
+3. **Transparency**  
+   - Enhances trust and traceability by providing the sources of retrieved information alongside the generated responses.
+
 
 ### Diffusion Model Responsible / MLOps
 - Develop and deploy **Diffusion Models** that simulate the spread of threats and vulnerabilities across networks.
