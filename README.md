@@ -144,6 +144,7 @@ The fine-tuned model demonstrates the following:
 ### 2. Retrieval-Augmented Generation (RAG)
 
 Retrieval-Augmented Generation (RAG) is a robust architecture that combines a retrieval mechanism with generative capabilities, enhancing the ability of language models to produce accurate and contextually relevant responses. In this project, RAG is utilized to build a cybersecurity-focused chatbot that answers domain-specific queries by retrieving relevant context from a document database.
+![image](https://github.com/user-attachments/assets/f5a86767-259a-428b-aa00-b5ca3d29c413)
 
 #### Step 1: Embedding Function
 
