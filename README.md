@@ -46,7 +46,6 @@ As the LLMs Responsible, my role involves optimizing and fine-tuning pre-trained
 ---
 
 ## Fine-Tuning Process
-![image](https://github.com/user-attachments/assets/fad759b3-b1f7-4fcf-a730-f9f3637c19cb)
 
 
 ### Step 1: Preparing the Dataset
