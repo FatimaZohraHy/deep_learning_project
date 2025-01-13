@@ -39,23 +39,35 @@ The main objectives of the project are:
 - Design and manage the **CI/CD pipelines** to automate the testing, building, and deployment of the chatbot's microservices.
 - Ensure the security of the backend systems and integrate security measures, including encryption and secure API handling.
 
-### LLMs Responsible / MLOps
-As the LLMs responsible, my role involves optimizing and fine-tuning pre-trained Language Understanding Models in our case we used the **llama3-8b** to ensure they accurately handle cybersecurity-related queries. This process is essential for adapting the models to our specific domain and use case. The fine-tuning steps include the following:
-## 1. Fine-Tuning the Model
-![image](https://github.com/user-attachments/assets/d5a60941-7f2c-4932-bb95-b7d0994efdf5)
+# LLMs Responsible / MLOps
 
-   Fine-tuning is a critical step to adapt the pre-trained models to the specific needs of cybersecurity-related question answering. The process involves the following steps:
-   - **Step 1: Preparing the Dataset**
-   To fine-tune the models, we start by collecting and structuring a dataset tailored to cybersecurity. The dataset contains cybersecurity-related question-answer pairs, formatted in a way that allows the model to learn from previous interactions and respond with relevant, domain-specific knowledge.
-we also used **generated synthetic data** using LLMs you can find it here: **_https://huggingface.co/datasets/Joussef/my_sec_data_**
-- **Step 2: Loading Pre-Trained Models**
-   We begin by loading the pre-trained model, using a specialized framework like **_unsloth_** or **_transformers_**. This provides a strong foundation for the fine-tuning process since these models have already been trained on a large corpus of text data. By using these models, we can leverage their existing language capabilities while specializing them for cybersecurity tasks.
-- **Step 3: Fine-Tuning the Model**
-   The fine-tuning process involves training the model on our custom dataset. We adjust hyperparameters like batch size, learning rate, and number of epochs to optimize the model's performance. During this step, the model learns how to respond accurately to cybersecurity-related queries, improving its ability to understand and generate relevant answers.
-- **Step 4: Evaluation and Testing**
-   After fine-tuning, the model is tested using a validation dataset to evaluate its performance. We look at various metrics such as accuracy, relevance, and response time to ensure that the model is responding correctly to cybersecurity questions.
-- **Step 5: Saving and Deploying the Fine-Tuned Model**
-   Once the model is fine-tuned and evaluated, we save it to a storage location. The fine-tuned model is then ready for deployment, where it will be integrated into the cybersecurity chatbot or other applications that require cybersecurity expertise.
+As the LLMs Responsible, my role involves optimizing and fine-tuning pre-trained Language Understanding Models (LLMs) to ensure they accurately handle cybersecurity-related queries. In this project, we fine-tuned the **Llama-3-8B** model using a domain-specific cybersecurity dataset. This process is essential for adapting the model to our specific use case, enabling it to provide accurate, relevant, and actionable responses to cybersecurity questions.
+
+---
+
+## Fine-Tuning Process
+
+### Step 1: Preparing the Dataset
+To fine-tune the model, we curated a dataset tailored to cybersecurity. The dataset consists of question-answer pairs that cover a wide range of cybersecurity topics, such as threat detection, incident response, and network security. Additionally, synthetic data was generated using LLMs to enhance its diversity and coverage.
+
+- **Dataset Source:** [Joussef/my_sec_data](https://huggingface.co/Joussef/my_sec_data) on Hugging Face  
+- **Dataset Format:**
+  ```json
+  {
+    "Question": "What is a common method used in Network Security to prevent unauthorized access?",
+    "Answer": "A common method used in Network Security to prevent unauthorized access is through the use of firewalls. Firewalls act as a barrier between a trusted internal network and untrusted external networks, controlling incoming and outgoing network traffic based on predetermined security rules."
+  }
+- **Prompt Template:**
+  ```text
+  You are a cybersecurity assistant. You must only answer questions related to cybersecurity. If a question is unrelated to cybersecurity, politely refuse to answer.
+  ### Instruction:
+  {instruction}
+
+  ### Input:
+  {input}
+
+  ### Response:
+  {output}
 
 ## 2. Retrieval-Augmented Generation (RAG)
 Retrieval-Augmented Generation (RAG) is a powerful architecture that enhances the ability of language models to generate accurate responses by combining a retrieval mechanism with generative capabilities. In this project, RAG is used to build a cybersecurity-focused chatbot capable of answering domain-specific queries by retrieving relevant context from a document database.
