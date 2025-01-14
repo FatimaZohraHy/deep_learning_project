@@ -1,4 +1,4 @@
-# Cybersecurity-Focused Chatbot Project
+# Cybersecurity-Focused Chatbot Project by : Youssef OUAAQA Fatima Zohra HAYOUN Lina TAACHA Mohamed BENDAHRASS Hicham ELGHALBZOURI
 
 ## Table of Contents
 1. [Introduction](#introduction)
