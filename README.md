@@ -45,7 +45,13 @@
     - [Step 2: Launch the Service](#step-2-launch-the-service)
     - [Result: Chatbot Hosted](#result-chatbot-hosted)
     - [Step 3: Deploy and Run the Service](#step-3-deploy-and-run-the-service)
-12. [Conclusion](#conclusion)
+12. [Front-End Development with Angular](#Front-End-with-Angular)
+    - [Install Prerequisites](#step-1-install-prerequisites)
+    - [Creating Components and Services](#Creating-Components-and-Services)
+    - [Integrating with Backend Services](#Integrating-with-Backend-Services)
+    - [User Interface Screenshots](#User-Interface-Screenshots)
+   
+13. [Conclusion](#conclusion)
    
 ## Introduction
 
@@ -744,6 +750,311 @@ This command will start the service and handle multiple requests with 5 workers,
 The chatbot is now hosted successfully:
 
 ![Hosted Chatbot](https://github.com/user-attachments/assets/3a810928-d4b0-4e7f-81d0-1ad49c515aea)
+
+---
+
+# Front-End Development with Angular
+
+## Introduction
+In this project, the front-end of the cybersecurity-focused chatbot is developed using **Angular**, a powerful and widely-used framework for building dynamic web applications. Angular provides a robust structure for creating reusable components, services, and modules, making it an ideal choice for developing complex user interfaces like the one required for this chatbot.
+
+---
+
+## Angular Project Structure
+The Angular project is structured to ensure modularity, scalability, and maintainability. Below is an overview of the key components and services used in the front-end development:
+
+### Key Components
+
+1. **App Component**:
+   - **`app.component.ts`**: The main component that serves as the entry point for the application. It handles the initial rendering and routing.
+   - **`app.component.html`**: The template for the main component, defining the structure of the application's UI.
+   - **`app.component.css`**: Styles specific to the main component.
+
+2. **Chat Component**:
+   - **`chat.component.ts`**: Manages the chat interface, including sending and receiving messages.
+   - **`chat.component.html`**: Defines the layout of the chat window, including input fields and message display areas.
+   - **`chat.component.css`**: Styles for the chat interface.
+
+3. **Home Component**:
+   - **`home.component.ts`**: Handles the logic for the home page, including navigation and initial user interactions.
+   - **`home.component.html`**: The template for the home page, providing a welcoming interface for users.
+   - **`home.component.css`**: Styles for the home page.
+
+4. **Login and Register Components**:
+   - **`login.component.ts`** and **`register.component.ts`**: Manage user authentication and registration.
+   - **`login.component.html`** and **`register.component.html`**: Templates for the login and registration forms.
+   - **`login.component.css`** and **`register.component.css`**: Styles for the authentication forms.
+
+---
+
+### Services
+
+1. **Auth Service**:
+   - **`auth.service.ts`**: Handles user authentication, including login, logout, and registration. It interacts with the backend to validate user credentials and manage sessions.
+
+2. **Chat Service**:
+   - **`chat.service.ts`**: Manages communication between the front-end and the backend for sending and receiving chat messages. It uses HTTP requests to interact with the chatbot's API.
+
+3. **HttpInterceptor Service**:
+   - **`http-interceptor.service.ts`**: Intercepts HTTP requests and responses to handle authentication tokens, error handling, and other cross-cutting concerns.
+
+---
+
+### Routing
+- **`app.routes.ts`**: Defines the routes for the application, enabling navigation between different components such as the home page, chat interface, and authentication forms.
+
+---
+
+### Assets and Styles
+- **`assets`**: Contains static assets like images and icons used in the application.
+- **`styles.css`**: Global styles applied across the entire application.
+
+---
+
+## Creating Components and Services
+
+### Generating Components
+Angular CLI is used to generate components, ensuring consistency and adherence to best practices. For example, to generate a new component:
+
+```bash
+ng generate component chat
+```
+
+This command creates the necessary files (`chat.component.ts`, `chat.component.html`, `chat.component.css`) and updates the module to include the new component.
+
+---
+
+### Generating Services
+Services are generated similarly using Angular CLI:
+
+```bash
+ng generate service auth
+```
+
+This command creates the service file (`auth.service.ts`) and updates the module to include the service.
+
+---
+### Implementing the Chat Interface
+The chat interface is implemented using Angular's data binding and event handling features.
+
+#### `chat.component.ts`:
+```typescript
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-chat',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
+  templateUrl: './chat.component.html',
+  styleUrl: './chat.component.css'
+})
+export class ChatComponent {
+  title = 'front-chatbot';
+  prompt: string = '';
+  loading: boolean = false;
+  chatHistory: any[] = [];
+  authService: AuthService = inject(AuthService);
+
+  constructor(private router: Router) {}
+
+  async SendData() {
+    if (this.prompt) {
+      this.loading = true;
+      const userMessage = this.prompt;
+      this.prompt = '';
+
+      // Add user message to chat history
+      this.chatHistory.push({ from: 'user', message: userMessage });
+
+      try {
+        // Call the generate_response method from AuthService
+        const response = await this.authService.generate_response(userMessage).toPromise();
+        
+        // Add bot response to chat history
+        this.chatHistory.push({ from: 'bot', message: response.response });
+      } catch (error) {
+        console.error('Error generating response:', error);
+        this.chatHistory.push({ from: 'bot', message: 'Sorry, something went wrong. Please try again.' });
+      } finally {
+        this.loading = false;
+      }
+    }
+  }
+
+  formatText(text: string) {
+    const result = text.replaceAll('*', '');
+    return result;
+  }
+
+  // Navigate to home
+  goToHome() {
+    this.router.navigate(['/']);
+  }
+
+  // Navigate to chat (optional, since you're already on chat page)
+  goToChat() {
+    this.router.navigate(['/chat']);
+  }
+
+  goToChatDm() {
+    this.router.navigate(['/chat-dm']);
+  }
+
+  goToChatRAG() {
+    this.router.navigate(['/chat-rag']);
+  }
+
+  // Function to handle conversation model choice
+  chooseModel(model: string) {
+    console.log('Chosen model:', model);
+    // Logic to switch chatbot model based on user's choice
+  }
+
+  logout() {
+    // Clear the token from localStorage
+    localStorage.removeItem('authToken');
+
+    // Redirect to the login page
+    this.router.navigate(['/home']);
+  }
+}
+```
+
+#### `chat.component.html`:
+```html
+<div class="navbar">
+  <div class="logo">
+    <h2>CyberSecurity Chatbot</h2>
+  </div>
+  <ul>
+    <li><button (click)="goToHome()">Home</button></li>
+    <li><button (click)="goToChat()">Chat</button></li>
+    <li><button (click)="logout()">Logout</button></li>
+  </ul>
+</div>
+
+<div class="chat-container">
+  <header class="chat-header">
+    <h4>Chatbot Fine Tuning</h4>
+  </header>
+  <main class="chat-history">
+    <ng-container *ngFor="let item of chatHistory">
+      <div class="message" [ngClass]="{'blue': item.from === 'user', 'green': item.from === 'bot'}">
+        <i class="fa" [ngClass]="{'fa-user-circle': item.from === 'user', 'fa-graduation-cap': item.from === 'bot'}"></i>
+        <span class="responses" [innerHTML]="formatText(item.message)"></span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="loading">
+      <div class="user-card">
+        <div class="name4 skeleton"></div>
+        <div class="name3 skeleton"></div>
+        <div class="name2 skeleton"></div>
+        <div class="name1 skeleton"></div>
+      </div>
+    </ng-container>
+  </main>
+
+  <footer class="chat-input">
+    <input type="text" id="message-input" (keyup.enter)="SendData()" placeholder="Type your messages..." [(ngModel)]="prompt" [disabled]="loading" autocomplete="off" /> &nbsp;
+    <button id="send-button" (click)="SendData()" [disabled]="loading">Send</button>
+  </footer>
+
+  <!-- Conversation choice buttons -->
+  <div class="conversation-choice">
+    <button (click)="goToChatRAG()">Chatbot RAG</button>
+    <button (click)="goToChat()">Chatbot Fine Tuning</button>
+    <button (click)="goToChatDm()">Generative AI</button>
+  </div>
+</div>
+```
+
+---
+
+### Integrating with Backend Services
+The front-end communicates with the backend services using Angular's `HttpClient` module. Here's an example of how the `ChatService` interacts with the backend:
+
+#### `chat.service.ts`:
+```typescript
+import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, Observable, retry, throwError, timeout } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  private apiUrl = 'http://localhost:8222/';
+  authStatusChanged = new EventEmitter<void>();
+
+  constructor(private http: HttpClient) {}
+
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}user/signup`, userData);
+  }
+
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}user/login`, credentials);
+  }
+
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}user/paginate`);
+  }
+
+  generate_response(prompt: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}ft/generate`, { prompt });
+  }
+
+  threat_detection(prompt: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .post<any>(`${this.apiUrl}ai/detection`, { prompt }, { headers })
+      .pipe(
+        timeout(300000), // 5 minutes timeout
+        retry(1),
+        catchError((error) => {
+          console.error('API Error:', error);
+          throw error;
+        })
+      );
+  }
+
+  query_rag(prompt: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}rag/generate`, { query_text: prompt });
+  }
+
+  saveToken(token: string): void {
+    localStorage.setItem('authToken', token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+  removeToken() {
+    localStorage.removeItem('token');
+    this.authStatusChanged.emit();
+  }
+}
+```
+
+## User Interface Screenshots
+After integrating the front-end with the backend, the user interface provides a seamless experience for interacting with the chatbot. Below are some screenshots of the application in action:
+
+### 1.Home PageThe 
+home page welcomes users and provides an option to start a secure conversation with the chatbot. It features a clean and intuitive design with a navigation bar at the top, including options for Home, Chat, Register, and Login. The center of the page displays a welcoming message, "Welcome to CyberSecurity Awareness", along with a call-to-action button labeled "Start Secure Conversation". This button invites users to begin interacting with the chatbot, emphasizing the application's goal of enhancing cybersecurity knowledge through AI-driven conversations. The design is user-friendly, encouraging users to either register, log in, or directly engage with the chatbot to learn more about cybersecurity in an interactive way.
+![ih2](https://github.com/user-attachments/assets/a154ce8d-7143-425e-879e-5ca444b2222b)
+### 1.Chat Interface
+L'interface de chat permet aux utilisateurs d'interagir avec le chatbot. Les utilisateurs peuvent saisir des messages, et le chatbot répond en temps réel. L'interface comprend une barre de navigation similaire à celle de la page d'accueil, un en-tête intitulé "Chatbot Fine Tuning", et une section d'historique de chat affichant les messages des utilisateurs et les réponses du chatbot. Les utilisateurs peuvent saisir leurs requêtes dans le champ de saisie intitulé "type your messages..." et les envoyer en utilisant le bouton Send. De plus, l'interface propose des options pour basculer entre différents modes de chatbot : Chatbot RAG, Chatbot Fine Tuning, et Generative AI, permettant aux utilisateurs d'adapter leur expérience en fonction de leurs besoins. Le design est convivial et axé sur une interaction fluide avec le chatbot.
+![ih1](https://github.com/user-attachments/assets/d7bf6c91-2b3c-43c6-aa4a-6518932970bb)
+
+---
 
 ## Conclusion
 This project successfully combines advanced machine learning technologies and microservices architecture to develop a sophisticated cybersecurity-focused chatbot. The chatbot leverages powerful Language Understanding Models (LUMs), Diffusion Models for threat forecasting, and Retrieval-Augmented Generation (RAG) to deliver intelligent and relevant responses tailored to cybersecurity needs.
